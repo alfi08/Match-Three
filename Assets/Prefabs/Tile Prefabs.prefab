@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2161962143793051669}
   - component: {fileID: 8949155498979686455}
   - component: {fileID: 7267246957046259396}
+  - component: {fileID: 5148767837557561120}
   m_Layer: 0
   m_Name: Tile Prefabs
   m_TagString: Untagged
@@ -106,3 +107,26 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.65, y: 0.89}
   m_EdgeRadius: 0
+--- !u!114 &5148767837557561120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4645565743372785110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a178493aa9ef7f04dab7935cf722ff0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: {x: 8, y: 4}
+  offsetTile: {x: 0.1, y: 0.1}
+  offsetBoard: {x: 0, y: -0.25}
+  tileTypes:
+  - {fileID: 21300000, guid: 283ed2b3bd774264b99ee0edd6f45639, type: 3}
+  - {fileID: 21300000, guid: 51bec8303eaf8084abd1cc8008d4e3fb, type: 3}
+  - {fileID: 21300000, guid: e0179eb6674655b47ae8d12f34234825, type: 3}
+  - {fileID: 21300000, guid: a094f0d38fc00ca4f95ba2265c943d55, type: 3}
+  - {fileID: 21300000, guid: 039a83ac8146fff4597f79f19f0d0d93, type: 3}
+  - {fileID: 21300000, guid: 93bd6e077823d5b40b027846ccabb97d, type: 3}
+  tilePrefab: {fileID: 4645565743372785110}
