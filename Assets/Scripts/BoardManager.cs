@@ -28,6 +28,16 @@ public class BoardManager : MonoBehaviour
 
   #endregion
 
+  public bool IsAnimating
+  {
+    get
+    {
+      return IsSwapping;
+    }
+  }
+
+  public bool IsSwapping { get; set; }
+
   [Header("Board")]
   public Vector2Int size;
   public Vector2 offsetTile;
@@ -36,7 +46,6 @@ public class BoardManager : MonoBehaviour
   [Header("Tile")]
   public List<Sprite> tileTypes = new List<Sprite>();
   public GameObject tilePrefab;
-
 
   private Vector2 startPosition;
 
@@ -95,5 +104,85 @@ public class BoardManager : MonoBehaviour
     }
 
     return possibleId;
+  }
+
+  #region Swapping
+
+  public IEnumerator SwapTilePosition(TileController a, TileController b, System.Action onCompleted)
+  {
+    IsSwapping = true;
+
+    Vector2Int indexA = GetTileIndex(a);
+    Vector2Int indexB = GetTileIndex(b);
+
+    tiles[indexA.x, indexA.y] = b;
+    tiles[indexB.x, indexB.y] = a;
+
+    a.ChangeId(a.id, indexB.x, indexB.y);
+    b.ChangeId(b.id, indexA.x, indexA.y);
+
+    bool isRoutineACompleted = false;
+    bool isRoutineBCompleted = false;
+
+    StartCoroutine(a.MoveTilePosition(GetIndexPosition(indexB), () => { isRoutineACompleted = true; }));
+    StartCoroutine(b.MoveTilePosition(GetIndexPosition(indexA), () => { isRoutineBCompleted = true; }));
+
+    yield return new WaitUntil(() => { return isRoutineACompleted && isRoutineBCompleted; });
+
+    onCompleted?.Invoke();
+
+    IsSwapping = false;
+  }
+
+  #endregion
+
+  public Vector2Int GetTileIndex(TileController tile)
+  {
+    for (int x = 0; x < size.x; x++)
+    {
+      for (int y = 0; y < size.y; y++)
+      {
+        if (tile == tiles[x, y]) return new Vector2Int(x, y);
+      }
+    }
+
+    return new Vector2Int(-1, -1);
+  }
+
+  public Vector2 GetIndexPosition(Vector2Int index)
+  {
+    Vector2 tileSize = tilePrefab.GetComponent<SpriteRenderer>().size;
+    return new Vector2(startPosition.x + ((tileSize.x + offsetTile.x) * index.x), startPosition.y + ((tileSize.y + offsetTile.y) * index.y));
+  }
+
+
+  public List<TileController> GetAllMatches()
+  {
+    List<TileController> matchingTiles = new List<TileController>();
+
+    for (int x = 0; x < size.x; x++)
+    {
+      for (int y = 0; y < size.y; y++)
+      {
+        List<TileController> tileMatched = tiles[x, y].GetAllMatches();
+
+        // just go to next tile if no match
+        if (tileMatched == null || tileMatched.Count == 0)
+        {
+          continue;
+        }
+
+        foreach (TileController item in tileMatched)
+        {
+          // add only the one that is not added yet
+          if (!matchingTiles.Contains(item))
+          {
+            matchingTiles.Add(item);
+          }
+        }
+      }
+    }
+
+    return matchingTiles;
   }
 }
