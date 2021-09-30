@@ -56,10 +56,12 @@ public class TileController : MonoBehaviour
   private void OnMouseDown()
   {
     // Non Selectable conditions
-    if (render.sprite == null || board.IsAnimating)
+    if (render.sprite == null || board.IsAnimating || game.IsGameOver)
     {
       return;
     }
+
+    SoundManager.Instance.PlayTap();
 
     // Already selected this tile?
     if (isSelected)
@@ -91,6 +93,7 @@ public class TileController : MonoBehaviour
             }
             else
             {
+              SoundManager.Instance.PlayWrong();
               SwapTile(otherTile);
             }
           });
