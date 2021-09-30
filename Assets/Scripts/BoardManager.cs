@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
+  private int combo;
+
   #region Singleton
 
   private static BoardManager _instance = null;
@@ -36,12 +38,14 @@ public class BoardManager : MonoBehaviour
     }
   }
 
+
   public bool IsSwapping { get; set; }
   public bool IsProcessing { get; set; }
 
   public void Process()
   {
     IsProcessing = true;
+    combo = 0;
     ProcessMatches();
   }
 
@@ -205,6 +209,10 @@ public class BoardManager : MonoBehaviour
       IsProcessing = false;
       return;
     }
+
+    combo++;
+    ScoreManager.Instance.IncrementCurrentScore(matchingTiles.Count, combo);
+
     StartCoroutine(ClearMatches(matchingTiles, ProcessDrop));
   }
 

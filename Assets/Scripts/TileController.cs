@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TileController : MonoBehaviour
 {
+  private GameFlowManager game;
   private static readonly Color selectedColor = new Color(0.5f, 0.5f, 0.5f);
   private static readonly Color normalColor = Color.white;
   private static readonly float moveDuration = 0.5f;
@@ -42,6 +43,7 @@ public class TileController : MonoBehaviour
   {
     board = BoardManager.Instance;
     render = GetComponent<SpriteRenderer>();
+    game = GameFlowManager.Instance;
   }
 
   public void ChangeId(int id, int x, int y)
@@ -84,8 +86,8 @@ public class TileController : MonoBehaviour
           {
             if (board.GetAllMatches().Count > 0)
             {
-              Debug.Log("MATCH FOUND");
               board.Process();
+              // Debug.Log("MATCH FOUND");
             }
             else
             {
